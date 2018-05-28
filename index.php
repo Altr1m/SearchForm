@@ -1,128 +1,113 @@
 <!DOCTYPE html >
   <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <title>Google Maps</title>
+    <title>Test</title>
+
+ <?php require('db/readdb.php'); ?>
+
   </head>
-<body>
+  <body style="margin:0px; padding:0px;">
+
 <label>Search:</label><br>
-<form name="searchbox" action="" target="" method="post">
-    <input type="text" autocomplete="off" placeholder="Search..." name="mapq" id="pac-input" />
+<form name="searchbox" action="/" target="" method="post">
+    <input type="text" autocomplete="off" placeholder="Search..." name="mapinput" id="pac-input" />
     <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px;" hidefocus="true" />
 </form>
 
-   <section class="inmap" id="inmap">
-          <div class="leftmapinfo"> 
-					<ul class="leftinfolist">
-
-					<li><h2>Doctors</h2><br></li>
-							<li id="haendler-0" class="haendlerausgabe" onclick="haendlerv2_myClick(0);return false;" style="background:url(//www.casio-europe.com/haendler_api/v2/pin.php?seite=protrek&amp;nr=1) 6px 10px no-repeat;">
-								<h4 class="subheader underline" style="display:inline-block;">UHRZEIT.ORG GMBH</h4><br>
-								<span class="copy-text">GAENSEMARKT 50 / GAENSEMARKT PASSAGE<br>								20354 HAMBURG<br>								Tel: 040 - 24424940<br>																E-Mail: SHOP@UHRZEIT.ORG<br></span>
+  <section class="inmap" id="inmap" >
+        
+          <div class="leftmapinfo">
+          <ul class="leftinfolist">
+          <?php foreach (json_decode($docs) as $key=>$dok) { ?>
+          <button class="collapsible">
+               <img src="images/<?php echo $dok->logo; ?>"/>
+               <h3><?php echo $dok->name; ?></h3>
+          </button>
+             <div class="content">
+              <li id="" class="dokimage">
+								<img src="images/<?php echo $dok->image; ?>"></img><br><br>
+                <span class="copy-text"><?php echo $dok->description; ?></span><br><br>
+                <span class="copy-text"><?php echo $dok->address; ?></span><br><br>
+                <span class="copy-text">Tel: <?php echo $dok->tel; ?></span>
 							</li>
+              </div>
+              <?php } ?>		   
+          </ul>
 
-							
-							<li id="haendler-1" class="haendlerausgabe" onclick="haendlerv2_myClick(1);return false;" style="background:url(//www.casio-europe.com/haendler_api/v2/pin.php?seite=protrek&amp;nr=2) 6px 10px no-repeat;">
-								<h4 class="subheader underline" style="display:inline-block;">JUWELIER KRAEMER</h4><br>
-								<span class="copy-text">MOENCKEBERGSTR. 5<br>								20095 HAMBURG<br>								Tel: 040   - 337120<br>																E-Mail: HAMBURG34@JUWELIERE-KRAEMER.DE<br></span>
-							</li>
 
-							
-							<li id="haendler-2" class="haendlerausgabe" onclick="haendlerv2_myClick(2);return false;" style="background:url(//www.casio-europe.com/haendler_api/v2/pin.php?seite=protrek&amp;nr=3) 6px 10px no-repeat;">
-								<h4 class="subheader underline" style="display:inline-block;">MEISTER LALLA</h4><br>
-								<span class="copy-text">LANGE REIHE 28<br>								20099 HAMBURG<br>								Tel: 040   - 245976<br>																E-Mail: INFO@MEISTER-LALLA.DE<br></span>
-							</li>			
-					</ul>
+
           </div>
 
           <div class="rightmapinfo" id="map"></div>
    </section>
-    
-    <script>
-      var customLabel = {
-        restaurant: {
-          label: 'R'
-        },
-        bar: {
-          label: 'B'
-        }
-      };
+   <script>
+// Add active class to the current button (highlight it)
+/*var header = document.getElementsByClassName("collapsible");*/
+/*var btns = document.getElementsByClassName("collapsible");
+for (var i = 0; i < btns.length; i++) {
+  btns[i].addEventListener("click", function() {
+    var current = document.getElementsByClassName("active");
+    current[0].className = current[0].className.replace(" active", "");
+    this.className += " active";
+  });
+}*/
 
-        function initMap() {
-       /* AUTO COMPLETE */ 
-       var map = new google.maps.Map(document.getElementById('map'), {
-         center: {lat: 53.594780, lng:  9.884969},
-          zoom: 13
-        });
-        var input = document.getElementById('pac-input');
+
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+            content.style.display = "none";
+        } else {
+            content.style.display = "block";
+        }
+    });
+}
+</script>
+<!-- CATEGORY MAP MARKERS -->
+<script type="text/javascript">
+ function initMap() {
+
+    var markersData = <?php echo $docs; ?>;
+    console.log(markersData);
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 12,
+      center: new google.maps.LatLng(53.594780, 9.884969),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+    var marker, i;
+
+  for (var i = 0; i < markersData.length; i++){
+    marker = new google.maps.Marker({
+        position: new google.maps.LatLng(markersData[i].lat, markersData[i].lng),
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(markersData[i].name);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+  }
+  /* AUTO COMPLETE */ 
+   var input = document.getElementById('pac-input');
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.bindTo('bounds', map);
-        /* END AUTOCOMPLETE  */
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: new google.maps.LatLng(53.594780, 9.884969),
-          zoom: 12
-        });
-        var infoWindow = new google.maps.InfoWindow;
-
-          downloadUrl('docs.xml', function(data) {
-            var xml = data.responseXML;
-            var markers = xml.documentElement.getElementsByTagName('marker');
-            Array.prototype.forEach.call(markers, function(markerElem) {
-              var id = markerElem.getAttribute('id');
-              var name = markerElem.getAttribute('name');
-              var address = markerElem.getAttribute('address');
-              var type = markerElem.getAttribute('type');
-              var point = new google.maps.LatLng(
-                  parseFloat(markerElem.getAttribute('lat')),
-                  parseFloat(markerElem.getAttribute('lng')));
-
-              var infowincontent = document.createElement('div');
-              var strong = document.createElement('strong');
-              strong.textContent = name
-              infowincontent.appendChild(strong);
-              infowincontent.appendChild(document.createElement('br'));
-
-              var text = document.createElement('text');
-              text.textContent = address
-              infowincontent.appendChild(text);
-              var icon = customLabel[type] || {};
-              var marker = new google.maps.Marker({
-                map: map,
-                position: point,
-                label: icon.label
-              });
-              marker.addListener('click', function() {
-                infoWindow.setContent(infowincontent);
-                infoWindow.open(map, marker);
-              });
-            });
-          });
-        }
-
-
-
-      function downloadUrl(url, callback) {
-        var request = window.ActiveXObject ?
-            new ActiveXObject('Microsoft.XMLHTTP') :
-            new XMLHttpRequest;
-
-        request.onreadystatechange = function() {
-          if (request.readyState == 4) {
-            request.onreadystatechange = doNothing;
-            callback(request, request.status);
-          }
-        };
-
-        request.open('GET', url, true);
-        request.send(null);
-      }
-
-      function doNothing() {}
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9ZRlVlsODKlPKvWz5Bv0Y8b4gsmY3qZw&libraries=places&callback=initMap">
-    </script>
+   /* END AUTOCOMPLETE  */      
+}
+</script>
+<!--<script type="text/javascript" src="map-marker.js"></script>-->
+<!-- END CATEGORY MAP MARKERS -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZnzboD5iPcg-PNQtY4vmWlQZ-9oCCTXc&libraries=places&callback=initMap"></script>
   </body>
 </html>
