@@ -21,7 +21,7 @@
           <div class="leftmapinfo">
           <ul class="leftinfolist">
           <?php foreach (json_decode($docs) as $key=>$dok) { ?>
-          <button class="collapsible">
+          <button class="collapsible" onclick="myFunction()">
                <img src="images/<?php echo $dok->logo; ?>"/>
                <h3><?php echo $dok->name; ?></h3>
           </button>
@@ -42,20 +42,19 @@
 
           <div class="rightmapinfo" id="map"></div>
    </section>
-   <script>
-// Add active class to the current button (highlight it)
-/*var header = document.getElementsByClassName("collapsible");*/
-/*var btns = document.getElementsByClassName("collapsible");
-for (var i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function() {
-    var current = document.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    this.className += " active";
-  });
-}*/
 
+<script>
+function myFunction() {
+var conte = document.getElementsByClassName("content");
+var btnact = document.getElementsByClassName("collapsible");
+for (var i = 0; i < conte.length; i++) {
+  conte[i].style.display = 'none';
+  btnact[i].className = btnact[i].className.replace(" active", "");
+}
+}
+</script>
 
-
+<script>
 var coll = document.getElementsByClassName("collapsible");
 var i;
 for (i = 0; i < coll.length; i++) {
