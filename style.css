@@ -12,13 +12,15 @@
       
       #map {
           height: 100%;
-          width: 68%;
+          width: 64%;
+          padding-right: 15px;
       }
       
       .rightmapinfo {
           width: 70%;
           height: 100%;
           overflow: auto;
+          padding-left: 15px;
       }
       
       .inmap {
@@ -32,17 +34,21 @@
           float: left;
           overflow: auto;
           margin-right: 15px;
+          margin-left: 20px;
       }
       
       #pac-input {
           background-color: #fff;
           font-family: Roboto;
-          font-size: 15px;
+          font-size: 20px;
           font-weight: 300;
           margin-left: 12px;
-          padding: 0 11px 0 13px;
           text-overflow: ellipsis;
-          width: 400px;
+          width: 28.6%;
+          border: 1px solid #ccc;
+          padding: 5px 10px;
+          height: 35px;
+          margin: 20px;
       }
       
       #pac-input:focus {
@@ -51,6 +57,7 @@
       
       .leftinfolist {
           padding: 0;
+          margin-top: 0;
       }
       
       .leftinfolist li {
