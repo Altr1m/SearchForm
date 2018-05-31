@@ -30,12 +30,13 @@
 
   <section class="inmap" id="inmap" style="display:block;">
         
-          <div class="leftmapinfo">
+        <div class="leftmapinfo">
           <ul class="leftinfolist">
           <?php foreach (json_decode($docs) as $key=>$dok) { ?>
           <button class="collapsible" onclick="myFunction()">
                <img src="images/<?php echo $dok->logo; ?>"/>
-               <h3><?php echo $dok->name; ?></h3>
+               <h3><?php echo $dok->name; ?>
+              </h3>             
           </button>
            <div class="content">
               <li id="" class="dokimage">
@@ -43,8 +44,10 @@
                 <span class="copy-text"><?php echo $dok->description; ?></span><br><br>
                 <span class="copy-text"><?php echo $dok->address; ?></span><br><br>
                 <span class="copy-text">Tel: <?php echo $dok->tel; ?></span><br><br>
-                <a href="mailto:<?php echo $dok->email; ?>" style="color: #1a75ac;"><i class="fas fa-envelope-square" style="font-size: 25px;"></i></a>&nbsp;
-                <a href="mailto:<?php echo $dok->website; ?>" style="color: #1a75ac;"><i class="fas fa-globe" style="font-size: 25px;"></i></a>
+                <a href="mailto:<?php echo $dok->email; ?>"><i class="fas fa-envelope-square"></i></a>&nbsp;&nbsp;
+                <a href="<?php echo $dok->website; ?>" target="_blank" ><i class="fas fa-globe"></i></a>
+                <a href="https://www.google.com/maps/?q=<?php echo $dok->lat; ?>,<?php echo $dok->lng; ?>" target="_blank" class="mapdirection"><i class="fas fa-map-marker-alt"></i></a><br><br>
+                <button class="closetab" onclick="myFunction()"><i class="fa fa-chevron-up" aria-hidden="true"></i></button>
 							</li>
             </div>
               <?php } ?>
@@ -53,20 +56,23 @@
           <div class="rightmapinfo" id="map"></div>
    </section>
 <script>
+var btnact = "";
 function myFunction() {
+/* DEACTIVATE ACTVIE CLASS */
 var conte = document.getElementsByClassName("content");
-var btnact = document.getElementsByClassName("collapsible");
+btnact = document.getElementsByClassName("collapsible");
 for (var i = 0; i < conte.length; i++) {
   conte[i].style.display = 'none';
   btnact[i].className = btnact[i].className.replace(" active", "");
 }
+activateTab();
+/* END DEACTIVATE ACTVIE CLASS */
 }
-</script> 
-<script>
-var coll = document.getElementsByClassName("collapsible");
-var i;
-for (i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function() {
+
+function activateTab() {
+/* ACTIVATE CURRENT CLASS */
+for (var i = 0; i < btnact.length; i++) {
+  btnact[i].addEventListener("click", function() { 
         this.classList.toggle("active");
         var content = this.nextElementSibling;
         if (content.style.display === "block") {
@@ -76,7 +82,9 @@ for (i = 0; i < coll.length; i++) {
         }
     });
 }
-</script>
+/* END ACTIVATE CURRENT CLASS */
+}
+</script> 
 <!-- CATEGORY MAP MARKERS -->
 <script type="text/javascript">
 
@@ -156,7 +164,8 @@ function showResults(autocomplete) {
 
                     if(result.length > 0) {
                         $.each(result, function(i, item) {
-                          var html ='<button class="collapsible" data-toggle="collapse" data-target="#collapse'+item.id+'" onclick="myFunction()"><img src="images/'+ item.logo +'"/><h3>'+ item.name +'</h3></button><div class="content" id="collapse'+item.id+'"><li class="dokimage"><img src="images/'+ item.image +'" /><br><br><span class="copy-text">'+ item.description +'</span><br><br><span class="copy-text">'+ item.address +'</span><br><br><span class="copy-text">Tel: '+ item.tel +'</span></li></div>';
+                          /*var html ='<button class="collapsible" data-toggle="collapse" data-target="#collapse'+item.id+'" onclick="myFunction()"><img src="images/'+ item.logo +'"/><h3>'+ item.name +'</h3></button><div class="content" id="collapse'+item.id+'"><li class="dokimage"><img src="images/'+ item.image +'" /><br><br><span class="copy-text">'+ item.description +'</span><br><br><span class="copy-text">'+ item.address +'</span><br><br><span class="copy-text">Tel: '+ item.tel +'</span></li></div>';*/
+                          var html = '<button class="collapsible" onclick="myFunction()"><img src="images/'+ item.logo +'"/><h3>'+ item.name +'</h3></button> <div class="content"><li class="dokimage"><img src="images/'+ item.image +'" /><br><br><span class="copy-text">'+ item.description +'</span><br><br><span class="copy-text">'+ item.address +'</span><br><br><span class="copy-text">Tel: '+ item.tel +'</span><br><br><a href="mailto:'+ item.email +'"><i class="fas fa-envelope-square"></i></a>&nbsp;&nbsp;<a href="'+ item.website +'" target="_blank"><i class="fas fa-globe"></i></a> <a href="https://www.google.com/maps/?q='+ item.lat +','+ item.lng +'" target="_blank" class="mapdirection"><i class="fas fa-map-marker-alt"></i></a><br><br> <button class="closetab" onclick="myFunction()"><i class="fa fa-chevron-up" aria-hidden="true"></i></button></li></div>';
                           $( ".leftinfolist" ).append( html );
                           createMarker(map, item);
                         });
