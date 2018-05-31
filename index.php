@@ -128,8 +128,9 @@ function createMarker(map, data) {
           map: map
         });
 
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
+            if(infowindow != null) infowindow.close(); 
             infowindow.setContent(data.name + '<br><br>' + '<b>Address:</b><br>' + data.address);
             infowindow.open(map, marker);
           }
