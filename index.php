@@ -111,8 +111,28 @@ function createMap(lat, lng) {
   var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 11,
       center: new google.maps.LatLng(lat, lng),
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.ROADMAP,
+      styles:  [
+  {
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "saturation": -70
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#93b8ca"
+      }
+    ]
+  }
+]
     });
+   
 
   return map;
 }
@@ -202,7 +222,7 @@ if (btnact.style.display === "none") {
 
 </script>
 <!-- END CATEGORY MAP MARKERS -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZnzboD5iPcg-PNQtY4vmWlQZ-9oCCTXc&libraries=places&callback=initMap"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDZnzboD5iPcg-PNQtY4vmWlQZ-9oCCTXc&libraries=places&style=element:geometry.fill%7Csaturation:-70&style=feature:water%7Celement:geometry.fill%7Ccolor:0x93b8ca&callback=initMap"></script>
     
   </body>
 </html>
