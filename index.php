@@ -28,8 +28,7 @@
     <input type="hidden" name="longitude" id="longitude" />
 </form>
 
-  <section class="inmap" id="inmap" style="display:block;">
-        
+  <section class="inmap" id="inmap" style="display:none;">     
         <div class="leftmapinfo">
           <ul class="leftinfolist">
           <?php foreach (json_decode($docs) as $key=>$dok) { ?>
@@ -128,24 +127,32 @@ function createMarker(map, data) {
           map: map
         });
 
+
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
-            if(infowindow != null) infowindow.close(); 
+            for (var i = 0; i < infowindow.length; i++) {
+              infowindow[i].close();
+            }
             infowindow.setContent(data.name + '<br><br>' + '<b>Address:</b><br>' + data.address);
             infowindow.open(map, marker);
           }
         })(marker, i));
+
+
 }
+
 
 function showResults(autocomplete) {
 
-  var place = autocomplete.getPlace(); 
+    var showmap = document.getElementById("inmap"); 
+    var place = autocomplete.getPlace(); 
     var lat = place.geometry.location.lat();
     var lng = place.geometry.location.lng();
     document.getElementById("latitude").value = lat;
     document.getElementById("longitude").value = lng;
     dst = document.getElementById("distance").value;
     dstToKm = dst / 1.62137119224; //convert km to miles
+    showmap.style.display = "block";
 
     if((document.getElementById("latitude").value != '') && (document.getElementById("longitude").value != '')) {
       $.ajax({
