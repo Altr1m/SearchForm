@@ -12,7 +12,9 @@
   </head>
   <body style="margin:0px; padding:0px;">
 
-<form name="searchbox" action="" target="" method="post">
+
+<form class="searchform" name="searchbox" action="" target="" method="post">
+    <img src="images/searchicon.png"/><br>
     <input type="text" autocomplete="off" placeholder="Ort, Addresse oder Postleitzahl eingeben..." name="mapinput" id="pac-input" />
     <input type="submit" style="height: 0px; width: 0px; border: none; padding: 0px;" hidefocus="true" />
     <select id="distance" hidden>
