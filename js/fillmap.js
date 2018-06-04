@@ -30,7 +30,6 @@ for (var i = 0; i < btnact.length; i++) {
 
 
 /* CATEGORY MAP MARKERS */
-
  function initMap() {
   var map = createMap(53.594780, 9.884969);
 
@@ -48,6 +47,7 @@ for (var i = 0; i < btnact.length; i++) {
     $( "#distance" ).change(function() {
       showResults(autocomplete);
     });
+
 
 }
 
@@ -79,6 +79,7 @@ function createMap(lat, lng) {
   return map;
 }
 
+
 function createMarker(map, data) {
     var infowindow = new google.maps.InfoWindow();
     var marker, i;
@@ -89,16 +90,20 @@ function createMarker(map, data) {
           map: map
         });
 
+       
+
       google.maps.event.addListener(marker, 'click', (function(marker, i) {
           return function() {
-            for (var i = 0; i < infowindow.length; i++) {
+            /*for (var i = 0; i < infowindow.length; i++) {
               infowindow[i].close();
-            }
+            }*/
+      
             infowindow.setContent(data.name + '<br><br>' + '<b>Address:</b><br>' + data.address);
             infowindow.open(map, marker);
           }
         })(marker, i));
 }
+
 
 
 function showResults(autocomplete) {
@@ -123,7 +128,6 @@ function showResults(autocomplete) {
               url: 'db/filterdb.php',
               dataType: 'json',
               success: function(result){
-                    
                     var map = createMap(lat, lng);
 
                     $( ".collapsible" ).remove();
@@ -131,6 +135,7 @@ function showResults(autocomplete) {
 
                     if(result.length > 0) {
                         $.each(result, function(i, item) {
+
                           /*var html ='<button class="collapsible" data-toggle="collapse" data-target="#collapse'+item.id+'" onclick="myFunction()"><img src="images/'+ item.logo +'"/><h3>'+ item.name +'</h3></button><div class="content" id="collapse'+item.id+'"><li class="dokimage"><img src="images/'+ item.image +'" /><br><br><span class="copy-text">'+ item.description +'</span><br><br><span class="copy-text">'+ item.address +'</span><br><br><span class="copy-text">Tel: '+ item.tel +'</span></li></div>';*/
                           var html = '<button class="collapsible" onclick="myFunction()"><img src="images/'+ item.logo +'"/><h3>'+ item.name +'</h3></button> <div class="content"><li class="dokimage"><img src="images/'+ item.image +'" /><br><br><span class="copy-text">'+ item.description +'</span><br><br><span class="copy-text">'+ item.address +'</span><br><br><span class="copy-text">Tel: '+ item.tel +'</span><br><br><a href="mailto:'+ item.email +'"><i class="fas fa-envelope-square"></i></a>&nbsp;&nbsp;<a href="'+ item.website +'" target="_blank"><i class="fas fa-globe"></i></a> <a href="https://www.google.com/maps/?q='+ item.lat +','+ item.lng +'" target="_blank" class="mapdirection"><i class="fas fa-map-marker-alt"></i></a><br><br> <button class="closetab" onclick="myFunction()"><i class="fa fa-chevron-up" aria-hidden="true"></i></button></li></div>';
                           $( ".leftinfolist" ).append( html );
