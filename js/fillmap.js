@@ -79,26 +79,27 @@ function createMap(lat, lng) {
   return map;
 }
 
+function hideAllInfoWindows(map) {
+  marker.forEach(function(marker) {
+    marker.infowindow.close(map, marke);
+ }); 
+}
 
 function createMarker(map, data) {
-    var infowindow = new google.maps.InfoWindow();
     var marker, i;
-
+    /*var infowindow = new google.maps.InfoWindow();*/
      marker = new google.maps.Marker({
           position: new google.maps.LatLng(data.lat, data.lng),
           icon: 'images/'+data.mapicon,
           map: map
         });
+   
 
-       
-
-      google.maps.event.addListener(marker, 'click', (function(marker, i) {
-          return function() {
-            /*for (var i = 0; i < infowindow.length; i++) {
-              infowindow[i].close();
-            }*/
-      
-            infowindow.setContent(data.name + '<br><br>' + '<b>Address:</b><br>' + data.address);
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {  
+          return function() {    
+            /*hideAllInfoWindows(map);*/
+            var infowindow = new google.maps.InfoWindow();
+            infowindow.setContent(data.name + '<br><br>' + '<b>Address:</b><br>' + data.address);          
             infowindow.open(map, marker);
           }
         })(marker, i));
@@ -107,7 +108,7 @@ function createMarker(map, data) {
 
 
 function showResults(autocomplete) {
-
+  
     var showmap = document.getElementById("inmap"); 
     var place = autocomplete.getPlace(); 
     var lat = place.geometry.location.lat();
