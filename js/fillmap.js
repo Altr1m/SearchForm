@@ -1,5 +1,6 @@
 
 var btnact = "";
+var currentInfoWindow = null; 
 function myFunction() {
 /* DEACTIVATE ACTVIE CLASS */
 var conte = document.getElementsByClassName("content");
@@ -78,13 +79,11 @@ function createMap(lat, lng) {
     });
   return map;
 }
-
 function hideAllInfoWindows(map) {
   marker.forEach(function(marker) {
     marker.infowindow.close(map, marke);
  }); 
 }
-
 function createMarker(map, data) {
     var marker, i;
     /*var infowindow = new google.maps.InfoWindow();*/
@@ -99,8 +98,12 @@ function createMarker(map, data) {
           return function() {    
             /*hideAllInfoWindows(map);*/
             var infowindow = new google.maps.InfoWindow();
-            infowindow.setContent(data.name + '<br><br>' + '<b>Address:</b><br>' + data.address);          
+            infowindow.setContent(data.name + '<br><br>' + '<b>Address:</b><br>' + data.address);       
+            if (currentInfoWindow != null) {  //xhevat
+              currentInfoWindow.close();  //xhevat
+            }	   
             infowindow.open(map, marker);
+            currentInfoWindow = infowindow;
           }
         })(marker, i));
 }
